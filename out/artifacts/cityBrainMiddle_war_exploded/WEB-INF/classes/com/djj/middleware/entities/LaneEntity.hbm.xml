@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.djj.middleware.entities.LaneEntity" table="lane" schema="citybrainmiddleware">
+        <id name="id" column="Id"/>
+        <property name="deviecNo" column="DeviecNo"/>
+        <property name="laneId" column="LaneID"/>
+        <property name="pointX" column="PointX"/>
+        <property name="pointY" column="PointY"/>
+        <property name="width" column="Width"/>
+    </class>
+</hibernate-mapping>

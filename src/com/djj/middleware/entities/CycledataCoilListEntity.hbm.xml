@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.djj.middleware.entities.CycledataCoilListEntity" table="cycledata_coil_list"
+           schema="citybrainmiddleware">
+        <id name="cycledataId" column="Cycledata_Id"/>
+        <property name="id" column="Id"/>
+        <property name="measNo" column="MeasNo"/>
+        <property name="laneNo" column="LaneNo"/>
+        <property name="coilNo" column="CoilNo"/>
+        <property name="volume" column="Volume"/>
+        <property name="volume1" column="Volume1"/>
+        <property name="volume2" column="Volume2"/>
+        <property name="volume3" column="Volume3"/>
+        <property name="volume4" column="Volume4"/>
+        <property name="volume5" column="Volume5"/>
+        <property name="avSpeed" column="AVSpeed"/>
+        <property name="occupancy" column="Occupancy"/>
+        <property name="headway" column="Headway"/>
+        <property name="gap" column="Gap"/>
+        <property name="speed85" column="Speed_85"/>
+    </class>
+</hibernate-mapping>

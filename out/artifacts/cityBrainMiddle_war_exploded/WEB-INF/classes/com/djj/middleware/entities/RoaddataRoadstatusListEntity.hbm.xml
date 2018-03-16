@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.djj.middleware.entities.RoaddataRoadstatusListEntity" table="roaddata_roadstatus_list"
+           schema="citybrainmiddleware">
+        <id name="roaddataId" column="Roaddata_Id"/>
+        <property name="id" column="Id"/>
+        <property name="laneNo" column="LaneNo"/>
+        <property name="vehicleNum" column="Vehicle_Num"/>
+        <property name="occupancy" column="Occupancy"/>
+        <property name="avSpeed" column="AVSpeed"/>
+        <property name="pareto" column="Pareto"/>
+        <property name="headPos" column="Head_Pos"/>
+        <property name="headSpeed" column="Head_Speed"/>
+        <property name="lastPos" column="Last_Pos"/>
+        <property name="lastSpeed" column="Last_Speed"/>
+    </class>
+</hibernate-mapping>

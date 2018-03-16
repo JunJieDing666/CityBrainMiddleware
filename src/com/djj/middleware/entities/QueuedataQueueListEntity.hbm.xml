@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.djj.middleware.entities.QueuedataQueueListEntity" table="queuedata_queue_list"
+           schema="citybrainmiddleware">
+        <id name="queueDataId" column="QueueData_Id"/>
+        <property name="id" column="Id"/>
+        <property name="laneNo" column="LaneNo"/>
+        <property name="queueLen" column="Queue_Len"/>
+        <property name="queueHead" column="Queue_Head"/>
+        <property name="queueTail" column="Queue_Tail"/>
+        <property name="queueNum" column="Queue_Num"/>
+    </class>
+</hibernate-mapping>

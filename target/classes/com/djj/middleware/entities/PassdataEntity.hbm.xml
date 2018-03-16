@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.djj.middleware.entities.PassdataEntity" table="passdata" schema="citybrainmiddleware">
+        <id name="id" column="Id"/>
+        <property name="deviceNo" column="DeviceNo"/>
+        <property name="timestamp" column="Timestamp"/>
+        <property name="measNo" column="MeasNo"/>
+        <property name="laneNo" column="LaneNo"/>
+        <property name="coilNo" column="CoilNo"/>
+        <property name="speed" column="Speed"/>
+        <property name="vehicleLen" column="Vehicle_Len"/>
+        <property name="vehicleType" column="Vehicle_Type"/>
+        <property name="presenceTime" column="PresenceTime"/>
+    </class>
+</hibernate-mapping>
