@@ -278,6 +278,7 @@ public class RadarUtil {
             //1.与雷达建立连接
             Socket realDataSck = new Socket();
             SocketAddress socketAddress = new InetSocketAddress(deviceIp, devicePort);
+			//确保在网络不通畅或雷达设备故障的情况下也能持续连接
             while (true) {
                 try {
                     realDataSck.connect(socketAddress, 2000);
@@ -294,7 +295,7 @@ public class RadarUtil {
             OutputStream os = realDataSck.getOutputStream();
             InputStream is = realDataSck.getInputStream();
 
-            //在临时缓冲区中寻找包头包尾
+            //定义包头包尾
             byte[] head = {-54, -53, -52, -51};
             byte[] tail = {-22, -21, -20, -19, 97, 103, 92, 20, -119, -58};
             int headIndex = -1;
@@ -302,44 +303,41 @@ public class RadarUtil {
 
             os.write("ff".getBytes());
 
-            //int count = 0;
             //3.建立长连接
             while (true) {
+				//判断远端服务器是否断开连接了
                 if (!isServerClose(realDataSck)) {
                     //3.接收雷达返回的数据
-                    //判断输入流是否有东西
+                    //判断输入流是否有数据，如果没有则等待10ms
                     if (is.available() > 0) {
                         int len = is.available();
                         byte buf[] = new byte[len];
                         is.read(buf, 0, len);
+						//将数据全部存入临时缓冲区
                         for (byte b : buf) {
                             queueFinal.add(b);
                         }
                         //4.处理断包、粘包
                         while (true) {
-                            //将数据全部存入临时缓冲区
-                            if (queueFinal.size() < 10) {
-                                break;
-                            }
-
                             headIndex = RadarUtil.indexOfArray(queueFinal, head);
                             tailIndex = RadarUtil.indexOfArray(queueFinal, tail);
 
                             if (headIndex >= 0 && tailIndex >= 0 && headIndex < tailIndex) {
                                 byte[] bytesFinal = new byte[tailIndex + 10 - headIndex];
-                                //找到了包头包尾，则提取出一帧放入最终缓冲区,如有多帧数据直接覆盖
+                                //找到了包头包尾，则提取出一帧放入字节缓冲区,如有多帧数据直接覆盖，同时扔掉队列缓冲区中包头前的多余字节
                                 for (int i = 0; i < headIndex; i++) {
                                     queueFinal.remove(0);
                                 }
-
+								
                                 for (int i = 0; i < bytesFinal.length; i++) {
                                     bytesFinal[i] = queueFinal.get(0);
                                     queueFinal.remove(0);
                                 }
 
+								//解析雷达数据并存入数据库
                                 operateRealTimeData(interSectionId, dir, deviceNo, lanes, deviceIp, devicePort, conn, stmt, bytesFinal);
 
-                                //粘包，包尾后还有内容，则放入残余缓存区
+								//粘包，即包尾后还有内容，如果没有粘包则继续发送tcp请求收取下一帧数据
                                 if (queueFinal.size() > 0) {
                                     System.out.println("粘包了");
                                 } else {
@@ -348,22 +346,23 @@ public class RadarUtil {
                                     break;
                                 }
 
-                            } else if (headIndex >= 0 && tailIndex == -1) {
-                                //断包
+                            } else if (headIndex >= 0 && tailIndex == -1 || headIndex == -1 && tailIndex == -1) {
+                                //断包，即接收到的包不完整，则跳出内圈循环，进入外圈循环，从输入流中继续读取数据
                                 System.out.println("断包了");
                                 Thread.sleep(10);
                                 break;
                             } else if ((headIndex == -1 && tailIndex >= 0) || headIndex > tailIndex) {
-                                //残包
-                                for (int i = 0; i < tailIndex + 9; i++) {
+                                //残包，即只找到包尾或包头在包尾后面，则扔掉队列缓冲区中包尾及其之前的多余字节
+                                System.out.println("残包了");
+                                for (int i = 0; i < tailIndex + 10; i++) {
                                     queueFinal.remove(0);
                                 }
+                                //如果扔掉后队列缓冲区中为空，则可以直接进行下一轮tcp请求，否则跳出内圈循环，进入外圈循环，从输入流中继续读取数据
                                 if (queueFinal.size() == 0) {
                                     Thread.sleep(60);
                                     os.write("ff".getBytes());
                                     break;
                                 }
-                                System.out.println("残包了");
                             }
 
                         }
@@ -379,6 +378,7 @@ public class RadarUtil {
 
                     realDataSck = new Socket();
                     socketAddress = new InetSocketAddress(deviceIp, devicePort);
+					//确保在网络不通畅或雷达设备故障的情况下也能持续连接
                     while (true) {
                         try {
                             realDataSck.connect(socketAddress, 2000);
